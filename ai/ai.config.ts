@@ -8,7 +8,7 @@ export function getAgentModel(isPlanMode:boolean=false) {
   });
   
   const modelId = isPlanMode
-    ? process.env.NVIDIA_ULTRA_MODEL!
+    ? process.env.NVIDIA_PLAN_MODEL!
     : process.env.NVIDIA_DEFAULT_MODEL!;
   return provider(modelId!);
 }
