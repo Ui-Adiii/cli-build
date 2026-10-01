@@ -80,7 +80,7 @@ If a value is configured in both CLI configuration and `.env`, CLI configuration
 ### 5. Run the application
 
 ```bash
-cli-build
+cli-build wakeup 
 ```
 
 ## 🎯 Usage
