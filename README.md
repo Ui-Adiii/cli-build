@@ -214,7 +214,7 @@ ai/ai.config.ts
 cli/
 ├── index.ts                 # Main entry point
 ├── package.json             # Dependencies and scripts
-├── .env.local             # Environment variable template
+├── .env.local               # Environment variable template
 ├── tui/                     # Terminal UI components
 │   ├── wakeup.ts            # Banner and mode selection
 │   └── terminal-md.ts       # Terminal Markdown rendering
@@ -290,7 +290,7 @@ Then restart the CLI.
 Run:
 
 ```bash
-cli-build
+cli-build wakeup
 ```
 
 Then:
@@ -320,7 +320,7 @@ For your first run:
 ```bash
 bun install
 bun link
-cli-build
+cli-build wakeup
 ```
 
 Then try:
