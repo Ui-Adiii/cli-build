@@ -52,7 +52,7 @@ cli-build config set telegram-bot-token "your_telegram_bot_token_here"
 cli-build config set telegram-owner-id "your_telegram_user_id_here"
 ```
 
-### 4. Configure environment variables in `.env` file
+### 4. Configure environment variables in `.env` file (optional)
 
 Create a `.env` file in the project root.
 
