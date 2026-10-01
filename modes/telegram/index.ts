@@ -2,10 +2,11 @@ import { Telegraf } from "telegraf";
 import chalk from "chalk";
 import { WELCOME } from "./constants";
 import { registerHandlers } from "./handlers";
+import config from "../../config/config";
 
 export async function runTelegramMode() {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const ownerId = process.env.TELEGRAM_OWNER_ID;
+  const token = config["telegram-bot-token"] || process.env.TELEGRAM_BOT_TOKEN; ;
+  const ownerId = config["telegram-owner-id"] || process.env.TELEGRAM_OWNER_ID;
 
   const bot = new Telegraf(token!);
   registerHandlers(bot);

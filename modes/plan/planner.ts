@@ -14,6 +14,7 @@ import { ToolExecutor } from "../agent/tool-executor.ts";
 import { defaultAgentConfig } from "../agent/types.ts";
 import type { Plan, PlanStep } from "./types.ts";
 import { createWebTools } from "./web-tools.ts";
+import config from "../../config/config.ts";
 
 const planSchema = z.object({
   researchSummary: z.string().optional(),
@@ -136,11 +137,11 @@ const PLAN_INSTRUCTIONS = (codebase: string, hasWeb: boolean) =>
   ].join("\n");
 
 export async function generatePlan(goal: string) {
-  const config = defaultAgentConfig();
+  const configure = defaultAgentConfig();
   const tracker = new ActionTracker();
-  const executor = new ToolExecutor(tracker, config);
+  const executor = new ToolExecutor(tracker, configure);
 
-  const hasWeb = !!process.env.FIRECRAWL_API_KEY;
+  const hasWeb = !!config['firecrawl-api-key']||!!process.env.FIRECRAWL_API_KEY ;
   const model = wrapLanguageModel({
     model: getAgentModel(),
     middleware: extractJsonMiddleware(),
@@ -158,7 +159,7 @@ export async function generatePlan(goal: string) {
     model,
     tools,
     stopWhen: stepCountIs(12), // Reduced from 20
-    system: PLAN_INSTRUCTIONS(config.codebasePath, hasWeb),
+    system: PLAN_INSTRUCTIONS(configure.codebasePath, hasWeb),
     prompt: `User goal: \n${goal}`,
     output: Output.object({ schema: planSchema }),
   });

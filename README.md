@@ -27,7 +27,32 @@ A versatile CLI tool built with **Bun** and **TypeScript** that provides AI-powe
 bun install
 ```
 
-### 2. Configure environment variables
+### 2. Link the CLI
+
+To use `cli-build` as a global command from any directory, link the project using Bun:
+
+```bash
+bun link
+```
+
+### 3. Configure through CLI
+
+After installing dependencies, configure the CLI using the following commands:
+
+```bash
+# NVIDIA configuration
+cli-build config set nvidia-api-key "your_nvidia_api_key_here"
+cli-build config set model "nvidia/nemotron-3-super-120b-a12b"
+
+# Firecrawl - Web Search
+cli-build config set firecrawl-api-key "your_firecrawl_api_key_here"
+
+# Telegram Mode
+cli-build config set telegram-bot-token "your_telegram_bot_token_here"
+cli-build config set telegram-owner-id "your_telegram_user_id_here"
+```
+
+### 4. Configure environment variables in `.env` file
 
 Create a `.env` file in the project root.
 
@@ -48,12 +73,14 @@ TELEGRAM_OWNER_ID=your_telegram_user_id_here
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b
 ```
 
-> Keep your real API keys in `.env` and never commit them to Git.
+If a value is configured in both CLI configuration and `.env`, CLI configuration takes priority.
 
-### 3. Run the application
+> Keep your real API keys and tokens private. Never commit `.env` or `~/.cli-build/config.json` to Git.
+
+### 5. Run the application
 
 ```bash
-bun run index.ts
+cli-build
 ```
 
 ## 🎯 Usage
@@ -146,18 +173,22 @@ TELEGRAM_OWNER_ID=your_telegram_user_id_here
 
 ### Model Selection
 
-The models can be configured through environment variables:
+The model can be configured through CLI configuration or environment variables:
+
+```bash
+cli-build config set model "nvidia/nemotron-3-super-120b-a12b"
+```
 
 ```env
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b
 ```
 
-| Variable               | Purpose                                          |
-| ---------------------- | ------------------------------------------------ |
-| `NVIDIA_DEFAULT_MODEL` | Model used by default for Ask and Agent modes    |
-| `FIRECRAWL_API_KEY`    | Enables optional web search                      |
-| `TELEGRAM_BOT_TOKEN`   | Enables Telegram integration                     |
-| `TELEGRAM_OWNER_ID`    | Restricts Telegram access to the configured user |
+| Variable | Purpose |
+| ---------------------- | ----------------------------------------------- |
+| `NVIDIA_DEFAULT_MODEL` | Model used by default for Ask and Agent modes |
+| `FIRECRAWL_API_KEY` | Enables optional web search |
+| `TELEGRAM_BOT_TOKEN` | Enables Telegram integration |
+| `TELEGRAM_OWNER_ID` | Restricts Telegram access to the configured user |
 
 You can replace the NVIDIA model IDs with other compatible models supported by your configuration.
 
@@ -168,6 +199,7 @@ If you want to use **paid AI models** or a different AI provider, you can change
 ```text
 ai/ai.config.ts
 ```
+
 ## 🛡️ Safety Features
 
 * **Staging Area** — Changes can be staged before applying them
@@ -188,10 +220,10 @@ cli/
 │   └── terminal-md.ts       # Terminal Markdown rendering
 ├── modes/                   # Application modes
 │   ├── cli/
-│   │   ├── agent/            # Agent mode
-│   │   ├── plan/             # Plan mode
-│   │   └── ask/              # Ask mode
-│   └── telegram/             # Telegram mode
+│   │   ├── agent/           # Agent mode
+│   │   ├── plan/            # Plan mode
+│   │   └── ask/             # Ask mode
+│   └── telegram/            # Telegram mode
 ├── ai/                      # AI provider and model configuration
 ```
 
@@ -199,7 +231,9 @@ cli/
 
 ### API key not loaded
 
-Check that:
+The CLI supports both CLI configuration and `.env` configuration.
+
+For `.env`, check that:
 
 1. `.env` exists in the project root.
 2. `NVIDIA_API_KEY` is set correctly.
@@ -237,7 +271,13 @@ If a model consistently responds slowly, try another compatible NVIDIA model.
 
 ### Missing web search
 
-Set:
+Set through CLI:
+
+```bash
+cli-build config set firecrawl-api-key "your_firecrawl_api_key_here"
+```
+
+Or use `.env`:
 
 ```env
 FIRECRAWL_API_KEY=your_firecrawl_api_key_here
@@ -250,7 +290,7 @@ Then restart the CLI.
 Run:
 
 ```bash
-bun run index.ts
+cli-build
 ```
 
 Then:
@@ -279,7 +319,8 @@ For your first run:
 
 ```bash
 bun install
-bun run index.ts
+bun link
+cli-build
 ```
 
 Then try:

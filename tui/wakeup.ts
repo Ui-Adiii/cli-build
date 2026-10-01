@@ -9,7 +9,6 @@ const SHADOW = chalk.hex("#5b4d9e")
 const FACE = chalk.hex("#e8dcf8").bold;
 
 function printBannerWithShadow(ascii: string) {
-  console.log(process.env.NVIDIA_API_KEY);
   const lines = ascii.trimEnd().split("\n");
   const width = Math.max(...lines.map((line) => line.length));
 

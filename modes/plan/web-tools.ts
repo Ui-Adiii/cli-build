@@ -2,6 +2,7 @@ import { tool } from "ai";
 import { z } from "zod";
 import Firecrawl from "@mendable/firecrawl-js";
 import type { ActionTracker } from "../agent/action-tracker.ts";
+import config from "../../config/config.ts";
 
 // Simple in-memory cache to reduce duplicate API calls
 const searchCache = new Map<string, { result: string; timestamp: number }>();
@@ -24,7 +25,7 @@ function cacheSearch(query: string, result: string): void {
   // Limit cache size to prevent memory issues
   if (searchCache.size > 100) {
     // Remove oldest entry
-    const oldestKey = Array.from(searchCache.entries())
+    const oldestKey = Array.from(searchCache?.entries())
       .sort(([, a], [, b]) => a.timestamp - b.timestamp)[0][0];
     searchCache.delete(oldestKey);
   }
@@ -35,7 +36,7 @@ let client: Firecrawl | null = null;
 function getClient(): Firecrawl {
   if (client) return client;
   client = new Firecrawl({
-    apiKey: process.env.FIRECRAWL_API_KEY,
+    apiKey: config["firecrawl-api-key"]||process.env.FIRECRAWL_API_KEY ,
   });
   return client;
 }
