@@ -142,7 +142,7 @@ export async function generatePlan(goal: string) {
 
   const hasWeb = !!process.env.FIRECRAWL_API_KEY;
   const model = wrapLanguageModel({
-    model: getAgentModel(true),
+    model: getAgentModel(),
     middleware: extractJsonMiddleware(),
   });
 

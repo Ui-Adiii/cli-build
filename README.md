@@ -46,7 +46,6 @@ TELEGRAM_OWNER_ID=your_telegram_user_id_here
 
 # NVIDIA Models
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b
-NVIDIA_PLAN_MODEL=nvidia/nemotron-3.5-lightning-30b-a3b
 ```
 
 > Keep your real API keys in `.env` and never commit them to Git.
@@ -151,13 +150,11 @@ The models can be configured through environment variables:
 
 ```env
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b
-NVIDIA_PLAN_MODEL=nvidia/nemotron-3.5-lightning-30b-a3b
 ```
 
 | Variable               | Purpose                                          |
 | ---------------------- | ------------------------------------------------ |
 | `NVIDIA_DEFAULT_MODEL` | Model used by default for Ask and Agent modes    |
-| `NVIDIA_PLAN_MODEL`    | Model used for Plan Mode                         |
 | `FIRECRAWL_API_KEY`    | Enables optional web search                      |
 | `TELEGRAM_BOT_TOKEN`   | Enables Telegram integration                     |
 | `TELEGRAM_OWNER_ID`    | Restricts Telegram access to the configured user |
