@@ -214,16 +214,16 @@ ai/ai.config.ts
 cli/
 ├── index.ts                 # Main entry point
 ├── package.json             # Dependencies and scripts
-├── .env.example             # Environment variable template
+├── .env.local             # Environment variable template
 ├── tui/                     # Terminal UI components
 │   ├── wakeup.ts            # Banner and mode selection
 │   └── terminal-md.ts       # Terminal Markdown rendering
 ├── modes/                   # Application modes
-│   ├── cli/
-│   │   ├── agent/           # Agent mode
-│   │   ├── plan/            # Plan mode
-│   │   └── ask/             # Ask mode
-│   └── telegram/            # Telegram mode
+│   ├── agent/               # Agent mode
+│   ├── plan/                # Plan mode
+│   ├── ask/                 # Ask mode
+│   ├── telegram/            # Telegram mode
+│   ├── cli.ts
 ├── ai/                      # AI provider and model configuration
 ```
 
