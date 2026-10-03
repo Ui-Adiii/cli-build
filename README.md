@@ -44,6 +44,9 @@ After installing dependencies, configure the CLI using the following commands:
 cli-build config set nvidia-api-key "your_nvidia_api_key_here"
 cli-build config set model "nvidia/nemotron-3-super-120b-a12b"
 
+# Fallback model if the primary model is unavailable
+cli-build config set model "nvidia/nemotron-3-ultra-550b-a55b"
+
 # Firecrawl - Web Search
 cli-build config set firecrawl-api-key "your_firecrawl_api_key_here"
 
@@ -72,7 +75,10 @@ TELEGRAM_OWNER_ID=your_telegram_user_id_here
 # NVIDIA Models
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b
 ```
-
+If the primary model is unavailable, you can change the value to:
+```text
+NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-ultra-550b-a55b
+```
 If a value is configured in both CLI configuration and `.env`, CLI configuration takes priority.
 
 > Keep your real API keys and tokens private. Never commit `.env` or `~/.cli-build/config.json` to Git.
@@ -178,9 +184,19 @@ The model can be configured through CLI configuration or environment variables:
 ```bash
 cli-build config set model "nvidia/nemotron-3-super-120b-a12b"
 ```
+Alternative model:
 
+If nvidia/nemotron-3-super-120b-a12b is unavailable or fails, configure:
+```bash
+cli-build config set model "nvidia/nemotron-3-ultra-550b-a55b"
+```
+For .env configuration:
 ```env
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b
+```
+If needed, replace it with:
+```env
+NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-ultra-550b-a55b
 ```
 
 | Variable | Purpose |
@@ -204,7 +220,7 @@ ai/ai.config.ts
 
 * **Staging Area** — Changes can be staged before applying them
 * **Approval Flow** — Changes require user approval where configured
-* **Limited Permissions** — Read-only tools are available where appropriate
+* **Limited Permissions** — Read-only tonols are available where appropriate
 * **Step Limits** — Limits agent iterations to help prevent runaway execution
 * **Tool Restrictions** — Different modes expose different tool capabilities
 
