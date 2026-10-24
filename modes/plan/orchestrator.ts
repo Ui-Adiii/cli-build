@@ -12,6 +12,7 @@ import { generatePlan } from "./planner.ts";
 import { printPlan, selectSteps } from "./selection.ts";
 import type { PlanStep } from "./types.ts";
 import { createWebTools } from "./web-tools.ts";
+import previousMessages from "../../ai/memory.ts";
 
 
 function stepPrompt(goal: string, step: PlanStep): string {
@@ -56,7 +57,18 @@ export async function runPlanMode(): Promise<void> {
       tools
     });
 
-    const r = await agent.generate({prompt:stepPrompt(plan.goal , step)})
+    const prompt = stepPrompt(plan.goal, step);
+
+    previousMessages.push({
+      role: "user",
+      content: prompt,
+    });
+
+    const r = await agent.generate({
+      messages: previousMessages,
+    });
+
+    previousMessages.push(...r.response.messages);
 
     if(r.text)console.log(renderTerminalMarkdown(r.text))
 

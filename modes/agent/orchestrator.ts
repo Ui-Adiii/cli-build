@@ -8,6 +8,7 @@ import { stepCountIs, ToolLoopAgent } from "ai";
 import { renderTerminalMarkdown } from "../../tui/terminal-md";
 import { runApprovalFlow } from "./approval";
 import { getAgentModel } from "../../ai";
+import previousMessages from "../../ai/memory";
 
 export async function runAgentMode() {
   console.log(chalk.bold("\n🤖 Agent Mode\n"));
@@ -22,7 +23,10 @@ export async function runAgentMode() {
   const tracker = new ActionTracker();
   const executor = new ToolExecutor(tracker, config);
   const tools = createAgentTools(executor);
-
+  previousMessages.push({
+    role: "user",
+    content: goal.trim(),
+  });
   // Optimized agent configuration for better performance
   const agent = new ToolLoopAgent({
     model: getAgentModel(),
@@ -54,7 +58,7 @@ export async function runAgentMode() {
   });
 
   const result = await agent.generate({
-    prompt: goal.trim(),
+    prompt: previousMessages,
     onStepFinish: ({ toolCalls }) => {
       for (const tc of toolCalls) {
         const preview = JSON.stringify(tc.input).slice(0, 160);
@@ -66,6 +70,7 @@ export async function runAgentMode() {
       }
     },
   });
+  previousMessages.push(...result.response.messages);
 
   if (result.text?.trim()) {
     console.log(renderTerminalMarkdown(result.text));

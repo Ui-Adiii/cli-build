@@ -9,6 +9,7 @@ import { defaultAgentConfig } from "../agent/types.ts";
 import { runApprovalFlow } from "../agent/approval.ts";
 import { renderTerminalMarkdown } from "../../tui/terminal-md.ts";
 import { createWebTools } from "../plan/web-tools.ts";
+import previousMessages from "../../ai/memory.ts";
 
 function createAskTools(executor: ToolExecutor) {
   return {
@@ -101,11 +102,19 @@ export async function runAskMode() {
     stopWhen: stepCountIs(5), // Reduced from 8
     tools,
   });
-  const result = await agent.generate({ prompt: question.trim() });
-  
+  previousMessages.push({
+    role: "user",
+    content: question.trim(),
+  });
+
+  const result = await agent.generate({
+    messages: previousMessages,
+  });
+
+  previousMessages.push(...result.response.messages);
   const answer = result.text?.trim() || "(no answer)";
   console.log("\n" + renderTerminalMarkdown(answer) + "\n");
-  
+
   const wantsSave = await confirm({
     message: "Save this answer to a .md file in the current directory?",
     initialValue: false,
