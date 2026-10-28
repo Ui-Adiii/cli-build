@@ -3,7 +3,6 @@ import { select, isCancel } from "@clack/prompts"
 import { runAgentMode } from "./agent/orchestrator";
 import { runAskMode} from "./ask/orchestrator"
 import { runPlanMode } from "./plan/orchestrator";
-import { runWakeUp } from "../tui/wakeup";
 
 export async function runCliMode() {
   while (true) {
@@ -16,7 +15,7 @@ export async function runCliMode() {
         { value: "back", label: "← Back to main menu" },
       ],
     });
-    if (isCancel(mode) || mode === "back") return;
+    if (isCancel(mode) || mode === "back") return ;
     else if (mode === "agent") {
     await runAgentMode()
     }

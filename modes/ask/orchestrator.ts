@@ -78,67 +78,78 @@ function asMd(question: string, answer: string): string {
 }
 
 export async function runAskMode() {
-  console.log(chalk.bold("\n❓ Ask Mode\n"));
+  try {
+    console.log(chalk.bold("\n❓ Ask Mode\n"));
 
-  const question = await text({ message: "What do you want to ask?" });
-  if (isCancel(question) || !question.trim()) return;
+    const question = await text({ message: "What do you want to ask?" });
+    if (isCancel(question) || !question.trim()) return;
 
-  const config = defaultAgentConfig();
-  config.tools.allowFileCreation = true;
-  config.tools.allowFileModification = false;
-  config.tools.allowFolderCreation = false;
-  config.tools.allowShellExecution = false;
+    const config = defaultAgentConfig();
+    config.tools.allowFileCreation = true;
+    config.tools.allowFileModification = false;
+    config.tools.allowFolderCreation = false;
+    config.tools.allowShellExecution = false;
 
-  const tracker = new ActionTracker();
-  const executor = new ToolExecutor(tracker, config);
+    const tracker = new ActionTracker();
+    const executor = new ToolExecutor(tracker, config);
 
-  const tools = {
-    ...createAskTools(executor),
-    ...createWebTools(tracker),
-  };
+    const tools = {
+      ...createAskTools(executor),
+      ...createWebTools(tracker),
+    };
 
-  const agent = new ToolLoopAgent({
-    model: getAgentModel(),
-    stopWhen: stepCountIs(5), // Reduced from 8
-    tools,
-  });
-  previousMessages.push({
-    role: "user",
-    content: question.trim(),
-  });
+    const agent = new ToolLoopAgent({
+      model: getAgentModel(),
+      stopWhen: stepCountIs(5), // Reduced from 8
+      tools,
+    });
+    previousMessages.push({
+      role: "user",
+      content: question.trim(),
+    });
 
-  const result = await agent.generate({
-    messages: previousMessages,
-  });
+    const result = await agent.stream({
+      messages: previousMessages,
+    });
 
-  previousMessages.push(...result.response.messages);
-  const answer = result.text?.trim() || "(no answer)";
-  console.log("\n" + renderTerminalMarkdown(answer) + "\n");
+    let answer = "";
 
-  const wantsSave = await confirm({
-    message: "Save this answer to a .md file in the current directory?",
-    initialValue: false,
-  });
-  if (isCancel(wantsSave) || !wantsSave) return;
+    for await (const chunk of result.textStream) {
+      process.stdout.write(chunk);
+      answer += chunk;
+    }
 
-  const filename = await text({
-    message: "Filename",
-    initialValue: "ask.md",
-    validate: (v) => {
-      const s = (v ?? "").trim();
-      if (!s) return "Required";
-      if (s.includes("..") || s.includes("/") || s.includes("\\"))
-        return "No paths";
-      if (!s.toLowerCase().endsWith(".md")) return "Must end with .md";
-    },
-  });
+    console.log("\n");
 
-  if (isCancel(filename)) return;
+    previousMessages.push(...(await result.response).messages);
 
-  executor.createFile(filename, asMd(question, answer));
-  const ok = await runApprovalFlow(tracker);
-  if (!ok) return executor.clearStaging();
+    const wantsSave = await confirm({
+      message: "Save this answer to a .md file in the current directory?",
+      initialValue: false,
+    });
+    if (isCancel(wantsSave) || !wantsSave) return;
 
-  executor.applyApprovedFromTracker();
-  executor.clearStaging();
+    const filename = await text({
+      message: "Filename",
+      initialValue: "ask.md",
+      validate: (v) => {
+        const s = (v ?? "").trim();
+        if (!s) return "Required";
+        if (s.includes("..") || s.includes("/") || s.includes("\\"))
+          return "No paths";
+        if (!s.toLowerCase().endsWith(".md")) return "Must end with .md";
+      },
+    });
+
+    if (isCancel(filename)) return;
+
+    executor.createFile(filename, asMd(question, answer));
+    const ok = await runApprovalFlow(tracker);
+    if (!ok) return executor.clearStaging();
+
+    executor.applyApprovedFromTracker();
+    executor.clearStaging();
+  } catch (error) {
+    console.log(chalk.red(error));
+  }
 }

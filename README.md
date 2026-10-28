@@ -42,7 +42,7 @@ After installing dependencies, configure the CLI using the following commands:
 ```bash
 # NVIDIA configuration
 cli-build config set nvidia-api-key "your_nvidia_api_key_here"
-cli-build config set model "nvidia/nemotron-3-super-120b-a12b"
+cli-build config set model "nvidia/nemotron-3.5-super-vl-120b-a12b"
 
 # Fallback model if the primary model is unavailable
 cli-build config set model "nvidia/nemotron-3-ultra-550b-a55b"

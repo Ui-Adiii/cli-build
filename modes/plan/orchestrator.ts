@@ -14,76 +14,76 @@ import type { PlanStep } from "./types.ts";
 import { createWebTools } from "./web-tools.ts";
 import previousMessages from "../../ai/memory.ts";
 
-
 function stepPrompt(goal: string, step: PlanStep): string {
-  return [`Goal: ${goal}`, `Step: ${step.title}`, step.description].join('\n');
+  return [`Goal: ${goal}`, `Step: ${step.title}`, step.description].join("\n");
 }
 
-
 export async function runPlanMode(): Promise<void> {
-  console.log(chalk.bold("\n🧭 Plan Mode\n"));
+  try {
+    console.log(chalk.bold("\n🧭 Plan Mode\n"));
 
-  const goal = await text({ message: "What is your goal?" });
-  if (isCancel(goal) || !goal.trim()) return;
+    const goal = await text({ message: "What is your goal?" });
+    if (isCancel(goal) || !goal.trim()) return;
 
-  const plan = await generatePlan(goal);
+    const plan = await generatePlan(goal);
 
-  printPlan(plan);
+    printPlan(plan);
 
-  const selected = await selectSteps(plan);
-  if (selected.length === 0) return;
+    const selected = await selectSteps(plan);
+    if (selected.length === 0) return;
 
-  const proceed = await confirm({
-    message: `Execute ${selected.length} step(s)`,
-    initialValue: true,
-  });
-
-  const config = defaultAgentConfig();
-  const tracker = new ActionTracker();
-  const executor = new ToolExecutor(tracker, config);
-
-
-  const tools = {
-    ...createAgentTools(executor),
-    ...createWebTools(tracker)
-  };
-
-  for (const step of selected) {
-    console.log(chalk.bold(`\n🔧 ${step.title}\n`));
-
-    const agent = new ToolLoopAgent({
-      model:getAgentModel(),
-      stopWhen: stepCountIs(20),
-      tools
+    const proceed = await confirm({
+      message: `Execute ${selected.length} step(s)`,
+      initialValue: true,
     });
 
-    const prompt = stepPrompt(plan.goal, step);
+    const config = defaultAgentConfig();
+    const tracker = new ActionTracker();
+    const executor = new ToolExecutor(tracker, config);
 
-    previousMessages.push({
-      role: "user",
-      content: prompt,
-    });
+    const tools = {
+      ...createAgentTools(executor),
+      ...createWebTools(tracker),
+    };
 
-    const r = await agent.generate({
-      messages: previousMessages,
-    });
+    for (const step of selected) {
+      console.log(chalk.bold(`\n🔧 ${step.title}\n`));
 
-    previousMessages.push(...r.response.messages);
+      const agent = new ToolLoopAgent({
+        model: getAgentModel(),
+        stopWhen: stepCountIs(20),
+        tools,
+      });
 
-    if(r.text)console.log(renderTerminalMarkdown(r.text))
+      const prompt = stepPrompt(plan.goal, step);
 
+      previousMessages.push({
+        role: "user",
+        content: prompt,
+      });
+
+      const r = await agent.generate({
+        messages: previousMessages,
+      });
+
+      previousMessages.push(...r.response.messages);
+
+      if (r.text) console.log(renderTerminalMarkdown(r.text));
+    }
+
+    const ok = await runApprovalFlow(tracker);
+
+    if (!ok) return executor.clearStaging();
+
+    const { errors } = executor.applyApprovedFromTracker();
+    if (errors.length) {
+      console.log(chalk.red("\nSome operations reported errors:\n"));
+      for (const e of errors) console.log(chalk.red(`  • ${e}`));
+    } else {
+      console.log(chalk.green("\n✓ Applied.\n"));
+    }
+    executor.clearStaging();
+  } catch (error) {
+    console.log(chalk.red(error));
   }
-
-  const ok = await runApprovalFlow(tracker);
-
-  if(!ok) return executor.clearStaging();
-
-   const { errors } = executor.applyApprovedFromTracker();
-  if (errors.length) {
-    console.log(chalk.red('\nSome operations reported errors:\n'));
-    for (const e of errors) console.log(chalk.red(`  • ${e}`));
-  } else {
-    console.log(chalk.green('\n✓ Applied.\n'));
-  }
-  executor.clearStaging();
 }
