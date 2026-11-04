@@ -9,7 +9,15 @@ import { renderTerminalMarkdown } from "../../tui/terminal-md";
 import { runApprovalFlow } from "./approval";
 import { getAgentModel } from "../../ai";
 import previousMessages from "../../ai/memory";
-import {researchTool} from "./sub-agents/research.agent"
+import { researchTool } from "./sub-agents/research.agent"
+import { codebaseAnalysisTool } from "./sub-agents/codebase-analysis.agent"
+import { codeAnalysisTool } from "./sub-agents/code-analysis.agent"
+import { bugInvestigationTool } from "./sub-agents/bug-investigation.agent"
+import { technicalResearchTool } from "./sub-agents/technical-research.agent"
+import { implementationTool } from "./sub-agents/implementation.agent"
+import { multiAgentCoordinationTool } from "./sub-agents/multi-agent-coordination.agent"
+import { codeReviewTool } from "./sub-agents/code-review.agent"
+import { planningTool } from "./sub-agents/planning.agent";
 
 export async function runAgentMode() {
   try {
@@ -44,13 +52,63 @@ export async function runAgentMode() {
 
         "Delegate to the Research Agent only when the user asks to:",
         "- Read, analyze, or summarize README.md.",
-        "- Understand the project's purpose, features, technologies, and setup instructions documented in README.md.",
+        "- Explain the project's purpose, technologies, features, and setup instructions based on README.md.",
+        "- Extract installation, configuration, and execution steps from README.md.",
 
-        "Research Agent restrictions:",
-        "- README.md is the only file within the Research Agent's scope.",
-        "- Never delegate analysis of other project files to the Research Agent.",
-        "- Always use tools to read the actual README.md before reporting.",
-        "- Never assume implementation details that are not documented in README.md.",
+        "Research Agent Rules:",
+        "- Only README.md is within the scope of this delegation.",
+        "- Never delegate other project files to the Research Agent.",
+        "- Do not use README.md to make assumptions about implementation details not documented in it.",
+        "- Read the actual README.md using tools before reporting findings.",
+
+        "Delegate to the Codebase Analysis Agent when you need to:",
+        "- Understand overall project architecture.",
+        "- Map folder and file structure.",
+        "- Identify main modules and their responsibilities.",
+        "- Trace module interactions.",
+        "- List important dependencies.",
+
+        "Delegate to the Code Analysis Agent when you need to:",
+        "- Inspect authentication implementation.",
+        "- Understand user registration and login flow.",
+        "- Trace token and session management.",
+        "- Identify route protection middleware.",
+        "- Report security or architectural issues.",
+
+        "Delegate to the Bug Investigation Agent when you need to:",
+        "- Find runtime errors.",
+        "- Check edge cases and error handling.",
+        "- Identify performance issues.",
+        "- Explain root causes of confirmed issues.",
+
+        "Delegate to the Technical Research Agent when you need to:",
+        "- Research library evaluation.",
+        "- Identify integration points.",
+        "- Evaluate implementation approaches.",
+        "- Identify trade-offs.",
+
+        "Delegate to the Planning Agent when you need to:",
+        "- Create implementation plans for features like RBAC.",
+        "- Identify required changes, file modifications, database changes.",
+        "- Define testing strategy and potential risks.",
+
+        "Delegate to the Implementation Agent when you need to:",
+        "- Implement features (e.g., JWT refresh-token flow).",
+        "- Make file modifications (staged for approval).",
+        "- Handle token expiration, validation, error handling.",
+
+        "Delegate to the Multi-Agent Coordination Agent when you need to:",
+        "- Delegate research across multiple subagents.",
+        "- Collect and review findings from multiple agents.",
+        "- Prepare a unified implementation plan.",
+        "- Avoid duplicate delegation.",
+
+        "Delegate to the Code Review Agent when you need to:",
+        "- Review code quality and readability.",
+        "- Identify security vulnerabilities.",
+        "- Check error handling.",
+        "- Detect performance bottlenecks.",
+        "- Classify findings by severity (Critical, High, Medium, Low).",
 
         "For other development tasks:",
         "- Inspect relevant project files using available tools.",
@@ -77,6 +135,14 @@ export async function runAgentMode() {
       ].join("\n"),
       tools: {
         research: researchTool,
+        planing: planningTool,
+        codebaseAnalysis: codebaseAnalysisTool,
+        codeAnalysis: codeAnalysisTool,
+        bugInvestigation: bugInvestigationTool,
+        technicalResearch: technicalResearchTool,
+        implementation: implementationTool,
+        multiAgentCoordination: multiAgentCoordinationTool,
+        codeReview: codeReviewTool,
         ...tools,
       },
 

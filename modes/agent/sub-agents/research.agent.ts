@@ -95,7 +95,7 @@ export const researchTool = tool({
              const preview = JSON.stringify(tc.input).slice(0, 160);
              console.log(
                chalk.green("  ✓"),
-               chalk.bold(String(tc.toolName)),
+               chalk.yellow(String(tc.toolName)),
                chalk.dim(preview + (preview.length >= 160 ? "..." : "")),
              );
            }
