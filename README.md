@@ -42,7 +42,7 @@ After installing dependencies, configure the CLI using the following commands:
 ```bash
 # NVIDIA configuration
 cli-build config set nvidia-api-key "your_nvidia_api_key_here"
-cli-build config set model "nvidia/nemotron-3.5-super-vl-120b-a12b"
+cli-build config set model "nvidia/nemotron-3-super-vl-120b-a12b"
 
 # Fallback model if the primary model is unavailable
 cli-build config set model "nvidia/nemotron-3-ultra-550b-a55b"
@@ -75,10 +75,12 @@ TELEGRAM_OWNER_ID=your_telegram_user_id_here
 # NVIDIA Models
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b
 ```
+
 If the primary model is unavailable, you can change the value to:
 ```text
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-ultra-550b-a55b
 ```
+
 If a value is configured in both CLI configuration and `.env`, CLI configuration takes priority.
 
 > Keep your real API keys and tokens private. Never commit `.env` or `~/.cli-build/config.json` to Git.
@@ -184,16 +186,19 @@ The model can be configured through CLI configuration or environment variables:
 ```bash
 cli-build config set model "nvidia/nemotron-3-super-120b-a12b"
 ```
+
 Alternative model:
 
 If nvidia/nemotron-3-super-120b-a12b is unavailable or fails, configure:
 ```bash
 cli-build config set model "nvidia/nemotron-3-ultra-550b-a55b"
 ```
+
 For .env configuration:
 ```env
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-super-120b-a12b
 ```
+
 If needed, replace it with:
 ```env
 NVIDIA_DEFAULT_MODEL=nvidia/nemotron-3-ultra-550b-a55b
@@ -216,6 +221,24 @@ If you want to use **paid AI models** or a different AI provider, you can change
 ai/ai.config.ts
 ```
 
+### Configuration File Location
+
+CLI configuration is stored at:
+
+```
+~/.cli-build/config.json
+```
+
+This file is created automatically when you run `cli-build config set <key> <value>`. It contains:
+
+* `nvidia-api-key`
+* `model`
+* `firecrawl-api-key`
+* `telegram-bot-token`
+* `telegram-owner-id`
+
+---
+
 ## 🛡️ Safety Features
 
 * **Staging Area** — Changes can be staged before applying them
@@ -224,24 +247,97 @@ ai/ai.config.ts
 * **Step Limits** — Limits agent iterations to help prevent runaway execution
 * **Tool Restrictions** — Different modes expose different tool capabilities
 
-## 📝 Project Structure
+### How Staging Works
 
-```text
-cli/
-├── index.ts                 # Main entry point
-├── package.json             # Dependencies and scripts
-├── .env.local               # Environment variable template
-├── tui/                     # Terminal UI components
-│   ├── wakeup.ts            # Banner and mode selection
-│   └── terminal-md.ts       # Terminal Markdown rendering
-├── modes/                   # Application modes
-│   ├── agent/               # Agent mode
-│   ├── plan/                # Plan mode
-│   ├── ask/                 # Ask mode
-│   ├── telegram/            # Telegram mode
-│   ├── cli.ts
-├── ai/                      # AI provider and model configuration
+When the Agent or Plan mode proposes file changes:
+
+1. Changes are staged in an in-memory overlay (not written to disk yet)
+2. Each action is logged with a status: `pending`, `approved`, or `rejected`
+3. A diff is generated so you can review before approving
+4. You can approve all changes at once, review them one-by-one, or cancel
+5. Only approved changes are applied to the filesystem
+6. Staging is cleared after apply or cancel
+
+---
+
+## 📁 Project Structure
+
 ```
+cli-build/
+├── .gitignore                 # Git ignore rules
+├── README.md                  # This file
+├── bun.lock                   # Bun lockfile
+├── package.json               # Dependencies and scripts
+├── tsconfig.json              # TypeScript configuration
+├── index.ts                   # CLI entry point (Commander.js)
+│
+├── ai/
+│   ├── ai.config.ts           # LLM model provider config (NVIDIA NIM)
+│   ├── index.ts               # Re-exports getAgentModel
+│   └── memory.ts              # Shared conversation memory (ModelMessage[])
+│
+├── config/
+│   └── config.ts              # Config file path & loader (~/.cli-build/config.json)
+│
+├── tui/
+│   ├── terminal-md.ts         # Markdown rendering for terminal
+│   └── wakeup.ts              # Welcome banner + mode selector
+│
+├── modes/
+│   ├── cli.ts                 # Interactive CLI mode selector (ask/plan/agent)
+│   ├── agent/
+│   │   ├── orchestrator.ts    # Main agent mode loop + sub-agent delegation
+│   │   ├── types.ts           # Action types, AgentConfig, defaults
+│   │   ├── action-tracker.ts  # Staged action logging & status tracking
+│   │   ├── agent-tools.ts     # File system tool definitions (zod schemas)
+│   │   ├── approval.ts        # Interactive approval flow (CLI)
+│   │   ├── diff-view.ts       # Diff generation for staged changes
+│   │   ├── tool-executor.ts   # Core FS executor (read/write/delete/stage/apply)
+│   │   └── sub-agents/
+│   │       ├── bug-investigation.agent.ts    # Runtime errors, edge cases, performance
+│   │       ├── code-analysis.agent.ts        # Auth flow, tokens, sessions, security
+│   │       ├── code-review.agent.ts          # Code quality, security, performance
+│   │       ├── codebase-analysis.agent.ts    # Architecture, folder structure, deps
+│   │       ├── implementation.agent.ts       # Feature implementation, file changes
+│   │       ├── multi-agent-coordination.agent.ts # Coordinate multiple subagents
+│   │       ├── planning.agent.ts             # Implementation plans, risk assessment
+│   │       ├── research.agent.ts             # General research, README analysis
+│   │       └── technical-research.agent.ts   # Library evaluation, trade-offs
+│   │       └── plan.md                       # Sub-agent planning notes
+│   ├── ask/
+│   │   └── orchestrator.ts    # Ask mode (Q&A about codebase)
+│   ├── plan/
+│   │   ├── orchestrator.ts    # Plan mode (goal → steps → execution)
+│   │   ├── planner.ts         # Plan generation (JSON schema via LLM)
+│   │   ├── selection.ts       # Plan step selection UI
+│   │   ├── types.ts           # PlanStep, Plan interfaces
+│   │   └── web-tools.ts       # Firecrawl web search/crawl/fetch tools
+│   └── telegram/
+│       ├── index.ts           # Telegram bot entry (Telegraf)
+│       ├── agent-run.ts       # Ask/Agent/Plan execution for Telegram
+│       ├── approval-session.ts # Telegram inline approval flow
+│       ├── auth.ts            # Owner-only access control
+│       ├── constants.ts       # Welcome message
+│       ├── handlers.ts        # Command & callback query handlers
+│       ├── plan-session.ts    # In-memory plan session state
+│       └── text.ts            # Text utilities (clip, replyMd, commandArg)
+```
+
+### Module Overview
+
+| Module | Responsibility |
+|--------|---------------|
+| `index.ts` | CLI command definitions (`wakeup`, `config set/get`) |
+| `ai/` | AI provider config (NVIDIA NIM), shared conversation memory |
+| `config/` | Reads/writes `~/.cli-build/config.json` |
+| `tui/` | Terminal UI: banner, mode selector, markdown rendering |
+| `modes/cli.ts` | Interactive menu: Ask / Plan / Agent / Back |
+| `modes/agent/` | Full agent with file operations, staging, approval, sub-agents |
+| `modes/ask/` | Read-only Q&A about the codebase |
+| `modes/plan/` | Goal → structured plan → step selection → execution |
+| `modes/telegram/` | Telegram bot with owner auth, inline approval, plan sessions |
+
+---
 
 ## 🔍 Troubleshooting
 
@@ -301,6 +397,16 @@ FIRECRAWL_API_KEY=your_firecrawl_api_key_here
 
 Then restart the CLI.
 
+### Configuration not persisting
+
+CLI configuration is stored at `~/.cli-build/config.json`. If settings are not persisting:
+
+1. Check that `~/.cli-build/` directory is writable.
+2. Verify the config file exists and contains valid JSON.
+3. Re-run `cli-build config set <key> <value>` to re-set values.
+
+---
+
 ## ✅ Verify the Installation
 
 Run:
@@ -328,6 +434,146 @@ Explain how to create a basic HTTP server
 ```
 
 Finally, test Agent Mode with a small, safe task.
+
+---
+
+## 🎉 Getting Started
+
+For your first run:
+
+```bash
+bun install
+bun link
+cli-build wakeup
+```
+
+Then try:
+
+1. **Ask Mode** — Ask a simple programming question
+2. **Plan Mode** — Create an implementation plan
+3. **Agent Mode** — Give the agent a small coding task
+4. **Telegram Mode** — Connect your Telegram bot if configured
+
+---
+
+## 📦 Dependencies
+
+### Runtime Dependencies
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `ai` | ^7.0.118 | AI SDK core — ToolLoopAgent, tool, generateText, etc. |
+| `@ai-sdk/openai-compatible` | ^3.0.57 | OpenAI-compatible provider adapter (NVIDIA NIM) |
+| `@clack/core` | ^1.5.1 | Interactive CLI prompts core |
+| `@clack/prompts` | ^1.8.1 | Interactive CLI prompts (select, text, confirm) |
+| `@mendable/firecrawl-js` | ^4.42.0 | Web search/crawl/scrape API client |
+| `chalk` | ^6.0.1 | Terminal color styling |
+| `commander` | ^15.0.0 | CLI command framework |
+| `diff` | ^9.0.0 | Unified diff generation for staged changes |
+| `figlet` | ^1.11.4 | ASCII art banner |
+| `marked` | ^18.0.14 | Markdown parsing |
+| `marked-terminal` | ^7.3.0 | Markdown rendering in terminal |
+| `telegraf` | ^4.16.3 | Telegram bot framework |
+
+### Dev Dependencies
+
+| Package | Version | Purpose |
+|---------|---------|---------|
+| `@types/bun` | ^1.4.2 | Bun runtime type definitions |
+| `@types/marked-terminal` | ^6.1.1 | Types for marked-terminal |
+| `@types/node` | ^26.6.3 | Node.js type definitions |
+
+### Peer Dependencies
+
+* `typescript` ^7
+
+---
+
+## 🏗️ Architecture
+
+### Data Flow: CLI Startup → Mode Selection
+
+```
+index.ts (commander)
+  └── "wakeup" command
+        └── tui/wakeup.ts (runWakeUp)
+              ├── Figlet ASCII banner
+              └── select: CLI | Telegram | Exit
+                    ├── CLI → modes/cli.ts (runCliMode)
+                    │     ├── select: ask | plan | agent | back
+                    │     ├── ask → modes/ask/orchestrator.ts
+                    │     ├── plan → modes/plan/orchestrator.ts
+                    │     └── agent → modes/agent/orchestrator.ts
+                    └── Telegram → modes/telegram/index.ts (runTelegramMode)
+```
+
+### Data Flow: Agent Mode Execution (CLI)
+
+```
+modes/agent/orchestrator.ts (runAgentMode)
+  ├── User provides goal
+  ├── ActionTracker + ToolExecutor instantiated
+  ├── defaultAgentConfig() applied
+  ├── ToolLoopAgent with:
+  │   ├── Model: getAgentModel() → NVIDIA NIM via @ai-sdk/openai-compatible
+  │   ├── Tools: createAgentTools() (file ops, shell, search)
+  │   └── Sub-agent tools: researchTool, codebaseAnalysisTool, implementationTool, etc.
+  ├── Agent generates response, calls tools
+  ├── ToolExecutor logs actions to ActionTracker (staged, pending)
+  ├── Approval flow (approval.ts): interactive approve/reject with diffs
+  ├── ToolExecutor.applyApprovedFromTracker(): writes files, runs shell, creates folders
+  └── clearStaging()
+```
+
+### Data Flow: Sub-Agent Delegation
+
+```
+Main Agent (orchestrator.ts)
+  └── Delegates to sub-agent tool (e.g., codebaseAnalysisTool)
+        └── Sub-agent ToolLoopAgent (e.g., codebaseAnalysisAgent)
+              ├── Restricted read-only tools
+              ├── Independent investigation
+              └── Returns findings text to Main Agent
+```
+
+### Data Flow: Plan Mode Execution
+
+```
+modes/plan/orchestrator.ts (runPlanMode)
+  ├── User provides goal
+  ├── planner.ts (generatePlan) → structured JSON Plan (goal, researchSummary, steps[])
+  ├── selection.ts: printPlan + selectSteps (interactive multiselect)
+  ├── For each selected step:
+  │   └── ToolLoopAgent executes step with full toolset
+  ├── Approval flow (shared with agent mode)
+  └── Apply approved changes
+```
+
+### Data Flow: Telegram Mode
+
+```
+modes/telegram/index.ts (runTelegramMode)
+  ├── Telegraf bot with token + owner ID
+  └── handlers.ts (registerHandlers)
+        ├── /ask → agent-run.ts (runAsk) → read-only agent
+        ├── /agent → agent-run.ts (runAgent) → full agent + approval
+        ├── /plan → planner.ts generates plan → plan-session.ts stores state
+        │     └── Inline keyboard: toggle steps / proceed
+        │     └── agent-run.ts (runPlanSteps) executes selected steps
+        └── approval-session.ts: inline keyboard accept/reject/diff
+```
+
+---
+
+## 🛡️ Security Notes
+
+* Never commit `.env` or `~/.cli-build/config.json` to version control.
+* The `.gitignore` file should include `.env` and `~/.cli-build/`.
+* Telegram mode restricts access to a single owner ID (`TELEGRAM_OWNER_ID`).
+* File operations are staged and require explicit approval before being applied to disk.
+* Shell command execution is available only in Agent mode and requires approval.
+
+---
 
 ## 🎉 Getting Started
 
