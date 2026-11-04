@@ -9,6 +9,7 @@ import { renderTerminalMarkdown } from "../../tui/terminal-md";
 import { runApprovalFlow } from "./approval";
 import { getAgentModel } from "../../ai";
 import previousMessages from "../../ai/memory";
+import {researchTool} from "./sub-agents/research.agent"
 
 export async function runAgentMode() {
   try {
@@ -36,12 +37,26 @@ export async function runAgentMode() {
       stopWhen: stepCountIs(10),
 
       instructions: [
-        `Workspace root: ${config.codebasePath}`,
-        "All mutations are staged until approval.",
-        "Be concise and focused in your responses.",
-      ].join("\n"),
+         `Workspace root: ${config.codebasePath}`,
 
-      tools,
+  "You are the Main Developer Agent.",
+  "You have access to specialized subagents.",
+
+  "Delegate to research when the user asks to:",
+  "- Understand existing project files.",
+  "- Read or analyze README.md.",
+  "- Investigate project architecture.",
+  "- Research technical implementations.",
+
+  "Do not pretend to have inspected files without using tools.",
+  "All mutations are staged until approval.",
+  "Be concise and focused.",
+].join("\n"),
+
+      tools: {
+        research: researchTool,
+        // ...tools,
+      },
 
       // Optimized retry and timeout settings
       maxRetries: 2, // Increased from 1 for better reliability
