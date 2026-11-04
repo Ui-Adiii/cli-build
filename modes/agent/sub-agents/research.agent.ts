@@ -90,7 +90,18 @@ export const researchTool = tool({
        const result = await researchAgent.generate({
          prompt: task,
          abortSignal,
+         onStepFinish: ({ toolCalls }) => {
+           for (const tc of toolCalls) {
+             const preview = JSON.stringify(tc.input).slice(0, 160);
+             console.log(
+               chalk.green("  ✓"),
+               chalk.bold(String(tc.toolName)),
+               chalk.dim(preview + (preview.length >= 160 ? "..." : "")),
+             );
+           }
+         },
        });
+       
 
        console.log(chalk.green("\n✓ Research Agent Completed"));
 
