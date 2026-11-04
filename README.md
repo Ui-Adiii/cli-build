@@ -435,26 +435,6 @@ Explain how to create a basic HTTP server
 
 Finally, test Agent Mode with a small, safe task.
 
----
-
-## 🎉 Getting Started
-
-For your first run:
-
-```bash
-bun install
-bun link
-cli-build wakeup
-```
-
-Then try:
-
-1. **Ask Mode** — Ask a simple programming question
-2. **Plan Mode** — Create an implementation plan
-3. **Agent Mode** — Give the agent a small coding task
-4. **Telegram Mode** — Connect your Telegram bot if configured
-
----
 
 ## 📦 Dependencies
 
