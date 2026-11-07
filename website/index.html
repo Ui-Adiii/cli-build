@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLI Build</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <h1 class="logo">CLI<span class="accent">Build</span></h1>
+      <button class="theme-toggle" aria-label="Toggle dark/light theme" id="themeToggle">
+        <span class="icon">🌙</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h2>A versatile CLI tool built with <strong>Bun</strong> and <strong>TypeScript</strong></h2>
+      <p>AI-powered modes for code assistance, planning, and Telegram integration.</p>
+      <div class="hero-actions">
+        <a href="#features" class="btn btn-primary">Features</a>
+        <a href="#setup" class="btn btn-outline">Setup</a>
+      </div>
+    </section>
+
+    <section id="features" class="features">
+      <h2 class="section-title">Features</h2>
+      <div class="card-grid">
+        <article class="card">
+          <h3>CLI Mode</h3>
+          <p>Agent, Plan, and Ask sub-modes for code assistance.</p>
+        </article>
+        <article class="card">
+          <h3>Telegram Mode</h3>
+          <p>Interact with the AI through a Telegram bot.</p>
+        </article>
+        <article class="card">
+          <h3>AI-Powered</h3>
+          <p>Uses NVIDIA AI models through the NVIDIA API.</p>
+        </article>
+        <article class="card">
+          <h3>Web Search</h3>
+          <p>Optional Firecrawl integration for web research.</p>
+        </article>
+        <article class="card">
+          <h3>Safe Operations</h3>
+          <p>Changes can be staged and require approval before being applied.</p>
+        </article>
+        <article class="card">
+          <h3>Tool Calling</h3>
+          <p>AI agents can inspect and work with the project through configured tools.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="setup" class="setup">
+      <h2 class="section-title">Setup</h2>
+      <div class="setup-steps">
+        <div class="step">
+          <span class="step-number">1</span>
+          <div>
+            <h3>Install dependencies</h3>
+            <pre><code>bun install</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <div>
+            <h3>Link the CLI</h3>
+            <pre><code>bun link</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-number">3</span>
+          <div>
+            <h3>Configure through CLI</h3>
+            <pre><code>cli-build config set nvidia-api-key "your_nvidia_api_key_here"</code></pre>
+          </div>
+        </div>
+        <div class="step">
+          <span class="step-number">4</span>
+          <div>
+            <h3>Run the application</h3>
+            <pre><code>cli-build wakeup</code></pre>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="usage">
+      <h2 class="section-title">Usage Modes</h2>
+      <div class="card-grid">
+        <article class="card">
+          <h3>Ask Mode</h3>
+          <p>Quick questions, explanations, debugging, and codebase exploration.</p>
+        </article>
+        <article class="card">
+          <h3>Plan Mode</h3>
+          <p>New features, architectural changes, and complex implementation tasks.</p>
+        </article>
+        <article class="card">
+          <h3>Agent Mode</h3>
+          <p>Coding tasks, refactoring, debugging, and project modifications.</p>
+        </article>
+        <article class="card">
+          <h3>Telegram Mode</h3>
+          <p>Interact with the AI through your configured Telegram bot.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="config">
+      <h2 class="section-title">Configuration</h2>
+      <table>
+        <thead>
+          <tr><th>Variable</th><th>Purpose</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>NVIDIA_DEFAULT_MODEL</code></td><td>Model used by default for Ask and Agent modes</td></tr>
+          <tr><td><code>FIRECRAWL_API_KEY</code></td><td>Enables optional web search</td></tr>
+          <tr><td><code>TELEGRAM_BOT_TOKEN</code></td><td>Enables Telegram integration</td></tr>
+          <tr><td><code>TELEGRAM_OWNER_ID</code></td><td>Restricts Telegram access to the configured user</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="security">
+      <h2 class="section-title">Security Notes</h2>
+      <ul>
+        <li>Never commit <code>.env</code> or <code>~/.cli-build/config.json</code> to version control.</li>
+        <li>Telegram mode restricts access to a single owner ID.</li>
+        <li>File operations are staged and require explicit approval before being applied to disk.</li>
+      </ul>
+    </section>
+
+    <section class="getting-started">
+      <h2 class="section-title">Getting Started</h2>
+      <ol>
+        <li><code>bun install</code></li>
+        <li><code>bun link</code></li>
+        <li><code>cli-build wakeup</code></li>
+        <li>Try Ask Mode → Plan Mode → Agent Mode → Telegram Mode</li>
+      </ol>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-inner">
+      <p>Built with <strong>Bun</strong>, <strong>TypeScript</strong>, and <strong>NVIDIA AI</strong>.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
