@@ -177,27 +177,208 @@ tr:last-child td { border-bottom: 0; }
   .feature-grid { grid-template-columns: repeat(2, 1fr); }
   .install-layout { grid-template-columns: 1fr; }
 }
-@media (max-width: 620px) {
-  .container { width: min(100% - 34px, 1100px); }
-  .header-inner { min-height: 60px; gap: 12px; }
-  .header-nav { display: none; }
-  .theme-toggle { margin-left: auto; }
-  .hero { padding: 65px 0 58px; }
-  .hero-grid { grid-template-columns: 1fr; gap: 37px; }
-  .hero h1 { font-size: clamp(39px, 11vw, 51px); }
-  .hero-description { font-size: 13px; }
-  .hero-meta { gap: 10px; font-size: 9px; }
-  .hero-meta span + span::before { margin-right: 10px; }
-  .section { padding: 62px 0; }
-  .section-heading { margin-bottom: 28px; }
-  .feature-grid { grid-template-columns: 1fr; }
-  .feature { min-height: auto; padding: 19px; }
-  .install-main { padding: 18px; }
-  .install-step { padding: 17px; }
-  .footer-inner { padding: 20px 0; flex-wrap: wrap; gap: 12px 18px; }
-  .footer-link { margin-left: 0; }
-  .copyright { margin-left: auto; }
-}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 620px) {
+ .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+  }
+  /* Global */
+  html, body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .container {
+    width: calc(100% - 32px);
+    max-width: 100%;
+    padding: 0;
+  }
+
+  /* Header */
+  .header-inner {
+    min-height: 60px;
+    gap: 12px;
+    position: sticky;
+  }
+
+  .header-nav {
+    display: none;
+  }
+
+  .theme-toggle {
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  /* Hero */
+  .hero {
+    padding: 55px 0 45px;
+  }
+
+  .hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 35px;
+  }
+
+  .hero-content {
+    min-width: 0;
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 10vw, 48px);
+    line-height: 1.12;
+  }
+
+  .hero-description {
+    font-size: 13px;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
+  }
+
+  .hero-meta {
+    flex-wrap: wrap;
+    gap: 10px;
+    font-size: 9px;
+  }
+
+  .hero-visual {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .hero-terminal {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* Sections */
+  .section {
+    padding: 55px 0;
+  }
+
+  .section-heading {
+    margin-bottom: 28px;
+  }
+
+  .section-heading h2 {
+    font-size: 27px;
+  }
+
+  /* Features */
+  .feature-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .feature {
+    min-height: auto;
+    padding: 20px 17px;
+  }
+
+  /* Installation */
+  .install-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .install-main,
+  .install-next,
+  .install-step {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .install-main {
+    padding: 18px;
+  }
+
+  .install-step {
+    padding: 17px;
+  }
+
+  .code-window {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .code-window pre {
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .code-window code {
+    white-space: pre;
+  }
+
+  .install-description,
+  .install-step p {
+    overflow-wrap: break-word;
+  }
+
+  /* Configuration */
+  .table-wrap {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    min-width: 480px;
+  }
+
+  /* Security */
+  .security-item {
+    grid-template-columns: 32px minmax(0, 1fr);
+  }
+
+  /* Footer */
+  .footer-inner {
+    padding: 22px 0;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .footer-link {
+    margin-left: 0;
+  }
+
+  .copyright {
+    margin-left: auto;
+  }
+}
+
+/* Smaller phones */
+@media (max-width: 380px) {
+  .hero h1 {
+    font-size: 35px;
+  }
+
+  .hero-actions .button {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+
+  .hero-meta {
+    font-size: 8px;
+  }
+
+  .install-main {
+    padding: 14px;
+  }
+
+  .install-step {
+    padding: 14px;
+  }
 }
