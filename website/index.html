@@ -3,156 +3,204 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CLI Build</title>
+  <meta name="theme-color" content="#f7f7f5" />
+  <meta name="description" content="CLI Build is an open-source AI-powered command-line assistant for asking, planning, and building." />
+  <title>CLI Build — Your AI coding workflow, in the terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Inter:wght@400;500;600;650;700;750&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
+  <header class="site-header">
     <div class="container header-inner">
-      <h1 class="logo">CLI<span class="accent">Build</span></h1>
-      <button class="theme-toggle" aria-label="Toggle dark/light theme" id="themeToggle">
-        <span class="icon">🌙</span>
+      <a href="#" class="brand" aria-label="CLI Build home">
+        <span class="brand-mark">C</span>
+        <span>cli<span class="brand-light">-build</span></span>
+      </a>
+      <nav class="header-nav" aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#installation">Installation</a>
+        <a href="#configuration">Configuration</a>
+        <a href="https://github.com/ui-Adiii/cli-build" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+      </nav>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch color theme">
+        <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/></svg>
       </button>
     </div>
   </header>
 
-  <main class="container">
+  <main>
     <section class="hero">
-      <h2>A versatile CLI tool built with <strong>Bun</strong> and <strong>TypeScript</strong></h2>
-      <p>AI-powered modes for code assistance, planning, and Telegram integration.</p>
-      <div class="hero-actions">
-        <a href="#features" class="btn btn-primary">Features</a>
-        <a href="#setup" class="btn btn-outline">Setup</a>
-      </div>
-    </section>
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span> OPEN SOURCE <span class="eyebrow-separator">/</span> BUN + TYPESCRIPT</div>
+          <h1>A better way to<br><span>work in your terminal.</span></h1>
+          <p class="hero-description">CLI Build brings AI-assisted asking, planning, and coding into one focused command-line workflow. Powered by NVIDIA AI and built for developers.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#installation">Get started <span aria-hidden="true">→</span></a>
+            <a class="button button-secondary" href="https://github.com/ui-Adiii/cli-build" target="_blank" rel="noopener noreferrer">Explore source <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="hero-meta"><span>Built with Bun</span><span>TypeScript</span><span>NVIDIA AI</span></div>
+        </div>
 
-    <section id="features" class="features">
-      <h2 class="section-title">Features</h2>
-      <div class="card-grid">
-        <article class="card">
-          <h3>CLI Mode</h3>
-          <p>Agent, Plan, and Ask sub-modes for code assistance.</p>
-        </article>
-        <article class="card">
-          <h3>Telegram Mode</h3>
-          <p>Interact with the AI through a Telegram bot.</p>
-        </article>
-        <article class="card">
-          <h3>AI-Powered</h3>
-          <p>Uses NVIDIA AI models through the NVIDIA API.</p>
-        </article>
-        <article class="card">
-          <h3>Web Search</h3>
-          <p>Optional Firecrawl integration for web research.</p>
-        </article>
-        <article class="card">
-          <h3>Safe Operations</h3>
-          <p>Changes can be staged and require approval before being applied.</p>
-        </article>
-        <article class="card">
-          <h3>Tool Calling</h3>
-          <p>AI agents can inspect and work with the project through configured tools.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="setup" class="setup">
-      <h2 class="section-title">Setup</h2>
-      <div class="setup-steps">
-        <div class="step">
-          <span class="step-number">1</span>
-          <div>
-            <h3>Install dependencies</h3>
-            <pre><code>bun install</code></pre>
+        <div class="hero-terminal" aria-label="CLI Build terminal preview">
+          <div class="terminal-topbar">
+            <div class="window-controls"><i></i><i></i><i></i></div>
+            <span class="terminal-caption">cli-build — terminal</span>
+            <span class="terminal-caption terminal-caption-right">zsh</span>
           </div>
-        </div>
-        <div class="step">
-          <span class="step-number">2</span>
-          <div>
-            <h3>Link the CLI</h3>
-            <pre><code>bun link</code></pre>
+          <div class="terminal-content">
+            <div class="terminal-line"><span class="shell-prompt">›</span><span>cli-build wakeup</span></div>
+            <div class="terminal-gap"></div>
+            <div class="terminal-muted">Initializing CLI Build...</div>
+            <div class="terminal-success"><span>✓</span> Ask mode <b>ready</b></div>
+            <div class="terminal-success"><span>✓</span> Plan mode <b>ready</b></div>
+            <div class="terminal-success"><span>✓</span> Agent mode <b>ready</b></div>
+            <div class="terminal-muted terminal-last">Choose a mode to get started<span class="terminal-cursor"></span></div>
           </div>
-        </div>
-        <div class="step">
-          <span class="step-number">3</span>
-          <div>
-            <h3>Configure through CLI</h3>
-            <pre><code>cli-build config set nvidia-api-key "your_nvidia_api_key_here"</code></pre>
-          </div>
-        </div>
-        <div class="step">
-          <span class="step-number">4</span>
-          <div>
-            <h3>Run the application</h3>
-            <pre><code>cli-build wakeup</code></pre>
-          </div>
+          <div class="terminal-bottom"><span>CLI BUILD</span><span>AI DEVELOPMENT WORKFLOW</span></div>
         </div>
       </div>
     </section>
 
-    <section class="usage">
-      <h2 class="section-title">Usage Modes</h2>
-      <div class="card-grid">
-        <article class="card">
-          <h3>Ask Mode</h3>
-          <p>Quick questions, explanations, debugging, and codebase exploration.</p>
-        </article>
-        <article class="card">
-          <h3>Plan Mode</h3>
-          <p>New features, architectural changes, and complex implementation tasks.</p>
-        </article>
-        <article class="card">
-          <h3>Agent Mode</h3>
-          <p>Coding tasks, refactoring, debugging, and project modifications.</p>
-        </article>
-        <article class="card">
-          <h3>Telegram Mode</h3>
-          <p>Interact with the AI through your configured Telegram bot.</p>
-        </article>
+    <section class="features section" id="features">
+      <div class="container">
+        <div class="section-heading">
+          <div class="section-kicker">WHAT IT CAN DO</div>
+          <h2>One CLI. Multiple ways to work.</h2>
+          <p>Move from a quick question to a structured plan or an implementation workflow without leaving your terminal.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature">
+            <span class="feature-number">01</span>
+            <div><h3>Ask</h3><p>Get explanations, debug errors, ask questions, and explore your codebase.</p></div>
+            <span class="feature-arrow">↗</span>
+          </article>
+          <article class="feature">
+            <span class="feature-number">02</span>
+            <div><h3>Plan</h3><p>Break down features and architectural changes into actionable steps before coding.</p></div>
+            <span class="feature-arrow">↗</span>
+          </article>
+          <article class="feature">
+            <span class="feature-number">03</span>
+            <div><h3>Agent</h3><p>Work through coding tasks, refactoring, debugging, and project modifications.</p></div>
+            <span class="feature-arrow">↗</span>
+          </article>
+          <article class="feature">
+            <span class="feature-number">04</span>
+            <div><h3>Telegram</h3><p>Interact with your assistant through your configured Telegram bot.</p></div>
+            <span class="feature-arrow">↗</span>
+          </article>
+          <article class="feature">
+            <span class="feature-number">05</span>
+            <div><h3>Web research</h3><p>Use the optional Firecrawl integration to bring web research into your workflow.</p></div>
+            <span class="feature-arrow">↗</span>
+          </article>
+          <article class="feature">
+            <span class="feature-number">06</span>
+            <div><h3>Controlled changes</h3><p>Review staged file changes and approve operations before they are applied.</p></div>
+            <span class="feature-arrow">↗</span>
+          </article>
+        </div>
       </div>
     </section>
 
-    <section class="config">
-      <h2 class="section-title">Configuration</h2>
-      <table>
-        <thead>
-          <tr><th>Variable</th><th>Purpose</th></tr>
-        </thead>
-        <tbody>
-          <tr><td><code>NVIDIA_DEFAULT_MODEL</code></td><td>Model used by default for Ask and Agent modes</td></tr>
-          <tr><td><code>FIRECRAWL_API_KEY</code></td><td>Enables optional web search</td></tr>
-          <tr><td><code>TELEGRAM_BOT_TOKEN</code></td><td>Enables Telegram integration</td></tr>
-          <tr><td><code>TELEGRAM_OWNER_ID</code></td><td>Restricts Telegram access to the configured user</td></tr>
-        </tbody>
-      </table>
+    <section class="installation section" id="installation">
+      <div class="container">
+        <div class="section-heading section-heading-left">
+          <div class="section-kicker">GET STARTED</div>
+          <h2>Set up in a few commands.</h2>
+          <p>Clone the repository, install dependencies, link the CLI, and add your NVIDIA API key.</p>
+        </div>
+
+        <div class="install-layout">
+          <div class="install-main">
+            <div class="install-main-heading">
+              <div><span class="install-overline">01 — INSTALL</span><h3>Install from source</h3></div>
+              <span class="source-badge">Bun</span>
+            </div>
+            <p class="install-description">Run these commands in your terminal. This uses the repository's current Bun-based setup.</p>
+            <div class="code-window">
+              <div class="code-window-header"><span><i class="mini-dot"></i> Terminal</span><button class="copy-button" type="button" data-copy-target="clone-command">Copy</button></div>
+              <pre><code id="clone-command">git clone https://github.com/ui-Adiii/cli-build.git
+cd cli-build
+bun install
+bun link</code></pre>
+            </div>
+            <p class="code-hint"><span class="hint-symbol">i</span> Run <code>bun link</code> from inside the cloned project directory.</p>
+          </div>
+
+          <div class="install-next">
+            <article class="install-step">
+              <div class="step-top"><span class="step-number">02</span><span class="step-label">CONFIGURE</span></div>
+              <h3>Add your API key</h3>
+              <p>Configure the NVIDIA API key used by CLI Build.</p>
+              <div class="code-window compact">
+                <div class="code-window-header"><span>Terminal</span><button class="copy-button" type="button" data-copy-target="key-command">Copy</button></div>
+                <pre><code id="key-command">cli-build config set nvidia-api-key "your_key"</code></pre>
+              </div>
+            </article>
+            <article class="install-step">
+              <div class="step-top"><span class="step-number">03</span><span class="step-label">LAUNCH</span></div>
+              <h3>Start CLI Build</h3>
+              <p>Launch the interactive command-line assistant.</p>
+              <div class="code-window compact">
+                <div class="code-window-header"><span>Terminal</span><button class="copy-button" type="button" data-copy-target="launch-command">Copy</button></div>
+                <pre><code id="launch-command">cli-build wakeup</code></pre>
+              </div>
+            </article>
+          </div>
+        </div>
+        <div class="install-footnote">Having trouble? <a href="https://github.com/ui-Adiii/cli-build" target="_blank" rel="noopener noreferrer">Check the repository and README <span aria-hidden="true">↗</span></a></div>
+      </div>
     </section>
 
-    <section class="security">
-      <h2 class="section-title">Security Notes</h2>
-      <ul>
-        <li>Never commit <code>.env</code> or <code>~/.cli-build/config.json</code> to version control.</li>
-        <li>Telegram mode restricts access to a single owner ID.</li>
-        <li>File operations are staged and require explicit approval before being applied to disk.</li>
-      </ul>
+    <section class="configuration section" id="configuration">
+      <div class="container narrow-container">
+        <div class="section-heading section-heading-left">
+          <div class="section-kicker">REFERENCE</div>
+          <h2>Configuration</h2>
+          <p>Optional environment variables for connecting integrations and customizing model behavior.</p>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Variable</th><th>Description</th></tr></thead>
+            <tbody>
+              <tr><td><code>NVIDIA_DEFAULT_MODEL</code></td><td>Default model for Ask and Agent modes.</td></tr>
+              <tr><td><code>FIRECRAWL_API_KEY</code></td><td>Enables optional web search.</td></tr>
+              <tr><td><code>TELEGRAM_BOT_TOKEN</code></td><td>Enables Telegram integration.</td></tr>
+              <tr><td><code>TELEGRAM_OWNER_ID</code></td><td>Restricts Telegram access to the configured owner ID.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
-    <section class="getting-started">
-      <h2 class="section-title">Getting Started</h2>
-      <ol>
-        <li><code>bun install</code></li>
-        <li><code>bun link</code></li>
-        <li><code>cli-build wakeup</code></li>
-        <li>Try Ask Mode → Plan Mode → Agent Mode → Telegram Mode</li>
-      </ol>
+    <section class="security section">
+      <div class="container narrow-container">
+        <div class="section-heading section-heading-left">
+          <div class="section-kicker">SAFE BY DESIGN</div>
+          <h2>Stay in control.</h2>
+          <p>A few important practices when configuring and using your CLI.</p>
+        </div>
+        <div class="security-list">
+          <div class="security-item"><span class="security-mark">01</span><div><h3>Keep secrets private</h3><p>Never commit <code>.env</code> or <code>~/.cli-build/config.json</code> to version control.</p></div></div>
+          <div class="security-item"><span class="security-mark">02</span><div><h3>Limit Telegram access</h3><p>Configure the owner ID so Telegram access is restricted to the intended user.</p></div></div>
+          <div class="security-item"><span class="security-mark">03</span><div><h3>Review file operations</h3><p>Inspect staged changes and approve operations before they are applied to disk.</p></div></div>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer>
+  <footer class="site-footer">
     <div class="container footer-inner">
-      <p>Built with <strong>Bun</strong>, <strong>TypeScript</strong>, and <strong>NVIDIA AI</strong>.</p>
+      <a href="#" class="brand footer-brand"><span class="brand-mark">C</span><span>cli<span class="brand-light">-build</span></span></a>
+      <p>Built with Bun, TypeScript, and NVIDIA AI.</p>
+      <a class="footer-link" href="https://github.com/ui-Adiii/cli-build" target="_blank" rel="noopener noreferrer">GitHub repository ↗</a>
+      <span class="copyright">© 2026 CLI Build</span>
     </div>
   </footer>
-
   <script src="script.js"></script>
 </body>
 </html>
