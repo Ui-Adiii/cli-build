@@ -191,6 +191,9 @@ tr:last-child td { border-bottom: 0; }
     right: 0;
     width: 100%;
   }
+  .eyebrow{
+     padding-top:4rem;
+  }
   /* Global */
   html, body {
     width: 100%;
